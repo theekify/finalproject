@@ -1,17 +1,10 @@
 <?php
-session_start();
-
-// Check if the user is logged in and is an admin
-if (!isset($_SESSION['user_id']) || $_SESSION['user_role'] !== 'Admin') {
-    header('Location: admin_login.php');
-    exit();
-}
 
 require 'db.php';
 
 // Fetch admin details
 $stmt = $conn->prepare("SELECT * FROM admin WHERE User_ID = ?");
-$stmt->execute([$_SESSION['user_id']]);
+$stmt->execute([1]); // Replace 1 with the actual user ID you want to fetch
 $admin = $stmt->fetch(PDO::FETCH_ASSOC);
 
 // Handle profile update
@@ -22,7 +15,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // Update admin profile
     $stmt = $conn->prepare("UPDATE admin SET Admin_Name = ?, Admin_Email = ?, Admin_Phone = ? WHERE User_ID = ?");
-    $stmt->execute([$name, $email, $phone, $_SESSION['user_id']]);
+    $stmt->execute([$name, $email, $phone, 1]); // Replace 1 with the actual user ID you want to update
 
     echo "Profile updated successfully!";
 }
@@ -32,34 +25,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <html>
 <head>
     <title>Admin Profile</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-        }
-        .profile-form {
-            max-width: 400px;
-            margin: 0 auto;
-        }
-        .profile-form input {
-            width: 100%;
-            padding: 10px;
-            margin: 10px 0;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-        }
-        .profile-form button {
-            padding: 10px 20px;
-            background-color: #007BFF;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-        .profile-form button:hover {
-            background-color: #0056b3;
-        }
-    </style>
+    <link rel="stylesheet" href="admin_profile.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
 </head>
 <body>
     <h1>Admin Profile</h1>

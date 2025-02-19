@@ -1,6 +1,5 @@
 <?php
 
-
 require 'db.php';
 
 // Fetch system activity data
@@ -13,6 +12,8 @@ $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
 <html>
 <head>
     <title>Generate Reports</title>
+    <link rel="stylesheet" href="admin_report.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 <body>
     <h1>System Activity Report</h1>

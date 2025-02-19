@@ -19,14 +19,8 @@ $worker = $stmt->fetch(PDO::FETCH_ASSOC);
 <html>
 <head>
     <title>Worker Dashboard</title>
-    <style>
-        .banner {
-            background-color: #ffcc00;
-            padding: 10px;
-            text-align: center;
-            margin-bottom: 20px;
-        }
-    </style>
+    <link rel="stylesheet" type="text/css" href="worker_dash.css">
+    
 </head>
 <body>
     <?php
@@ -39,11 +33,25 @@ $worker = $stmt->fetch(PDO::FETCH_ASSOC);
     <p>Email: <?php echo $_SESSION['user_email']; ?></p>
     <p>Role: <?php echo $_SESSION['user_role']; ?></p>
 
+    <h2>Search and Apply for Jobs</h2>
+    <div class="search-form">
+        <form method="GET" action="worker_apply_jobs.php">
+            Search: <input type="text" name="search" placeholder="Job Title or Location">
+            <button type="submit">Search Jobs</button>
+        </form>
+    </div>
+
+    <h2>Search and Enroll in Courses</h2>
+    <div class="search-form">
+        <form method="GET" action="worker_enroll_training.php">
+            Search: <input type="text" name="search" placeholder="Training Name">
+            <button type="submit">Search Courses</button>
+        </form>
+    </div>
+
     <h2>Worker Functions</h2>
     <ul>
         <li><a href="worker_profile.php">View/Update Profile</a></li>
-        <li><a href="worker_apply_jobs.php">Apply for Jobs</a></li>
-        <li><a href="worker_enroll_training.php">Enroll in Training</a></li>
         <li><a href="worker_apply_insurance.php">Apply for Insurance</a></li>
         <li><a href="worker_submit_complaint.php">Submit Complaint</a></li>
     </ul>

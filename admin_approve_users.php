@@ -1,5 +1,11 @@
 <?php
+session_start();
 
+// Check if the user is logged in and is an admin
+if (!isset($_SESSION['user_id']) || $_SESSION['user_role'] !== 'Admin') {
+    header('Location: admin_login.php');
+    exit();
+}
 
 require 'db.php';
 
@@ -14,40 +20,35 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $action = $_POST['action']; // 'approve' or 'reject'
 
     if ($action === 'approve') {
-        // Move user to their respective table based on role
-        $stmt = $conn->prepare("SELECT * FROM user WHERE User_ID = ?");
+        // Update user status to 'Approved'
+        $stmt = $conn->prepare("UPDATE user SET User_Status = 'Approved' WHERE User_ID = ?");
+        $stmt->execute([$user_id]);
+
+        echo "User approved successfully!";
+    } elseif ($action === 'reject') {
+        // Delete user from the user table and their respective table
+        $stmt = $conn->prepare("DELETE FROM user WHERE User_ID = ?");
+        $stmt->execute([$user_id]);
+
+        // Delete from respective table based on role
+        $stmt = $conn->prepare("SELECT User_Role FROM user WHERE User_ID = ?");
         $stmt->execute([$user_id]);
         $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
         if ($user) {
             $role = $user['User_Role'];
-            $status = 'Approved';
-
-            // Update user status
-            $stmt = $conn->prepare("UPDATE user SET User_Status = ? WHERE User_ID = ?");
-            $stmt->execute([$status, $user_id]);
-
-            // Insert into respective table
-            if ($role === 'Worker') {
-                $stmt = $conn->prepare("INSERT INTO worker (User_ID, Passport_Number, Visa_Number, Health_Report, Training_Status, Insurance_Status) VALUES (?, '', '', 'Pending', 'In Progress', 'Inactive')");
-                $stmt->execute([$user_id]);
-            } elseif ($role === 'Admin') {
-                $stmt = $conn->prepare("INSERT INTO admin (User_ID, Admin_Name, Admin_Email, Admin_Phone, Admin_Status) VALUES (?, ?, ?, ?, 'Active')");
-                $stmt->execute([$user_id, $user['User_Name'], $user['User_Email'], $user['User_Phone']]);
+            if ($role === 'Admin') {
+                $stmt = $conn->prepare("DELETE FROM admin WHERE User_ID = ?");
             } elseif ($role === 'Staff') {
-                $stmt = $conn->prepare("INSERT INTO staff (User_ID, Staff_Name, Staff_Email, Staff_Phone, Staff_Address, Staff_Status) VALUES (?, ?, ?, ?, ?, 'Approved')");
-                $stmt->execute([$user_id, $user['User_Name'], $user['User_Email'], $user['User_Phone'], $user['User_Address']]);
+                $stmt = $conn->prepare("DELETE FROM staff WHERE User_ID = ?");
             } elseif ($role === 'Agency') {
-                $stmt = $conn->prepare("INSERT INTO agency (User_ID, Agency_Name, Agency_Address, License_Number, Approval_Status) VALUES (?, ?, ?, ?, 'Approved')");
-                $stmt->execute([$user_id, $user['User_Name'], $user['User_Address'], 'LICENSE123']); // Replace with actual license number
+                $stmt = $conn->prepare("DELETE FROM agency WHERE User_ID = ?");
+            } elseif ($role === 'Worker') {
+                $stmt = $conn->prepare("DELETE FROM worker WHERE User_ID = ?");
             }
-
-            echo "User approved and moved to $role table.";
+            $stmt->execute([$user_id]);
         }
-    } elseif ($action === 'reject') {
-        // Delete user from the user table
-        $stmt = $conn->prepare("DELETE FROM user WHERE User_ID = ?");
-        $stmt->execute([$user_id]);
+
         echo "User rejected and deleted.";
     }
 }
@@ -57,6 +58,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <html>
 <head>
     <title>Approve/Reject Users</title>
+    <link rel="stylesheet" type="text/css" href="admin_approve.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 <body>
     <h1>Pending Users</h1>

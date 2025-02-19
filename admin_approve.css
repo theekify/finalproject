@@ -1,0 +1,98 @@
+:root {
+    --primary: #6b1950;
+    --primary-light: #fdf4f9;
+    --primary-dark: #4a1237;
+    --text-dark: #2d1422;
+    --text-light: #666666;
+    --white: #ffffff;
+    --border: #e5e7eb;
+    --success: #10b981;
+    --warning: #f59e0b;
+    --danger: #ef4444;
+    --shadow: 0 4px 20px rgba(107, 25, 80, 0.1);
+    --transition: all 0.3s ease;
+  }
+  
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  }
+  
+  body {
+    min-height: 100vh;
+    background-color: var(--primary-light);
+    color: var(--text-dark);
+    padding: 2rem;
+  }
+  
+  h1 {
+    color: var(--primary);
+    font-size: 2rem;
+    margin-bottom: 2rem;
+    text-align: center;
+  }
+  
+  table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    background: var(--white);
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: var(--shadow);
+  }
+  
+  th, td {
+    padding: 1rem;
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+  }
+  
+  th {
+    background-color: var(--primary-light);
+    font-weight: 600;
+    color: var(--primary);
+  }
+  
+  tr:last-child td {
+    border-bottom: none;
+  }
+  
+  button {
+    background-color: var(--primary);
+    color: var(--white);
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: var(--transition);
+    margin-right: 0.5rem;
+  }
+  
+  button[value="approve"] {
+    background-color: var(--success);
+  }
+  
+  button[value="reject"] {
+    background-color: var(--danger);
+  }
+  
+  button:hover {
+    opacity: 0.9;
+  }
+  
+  @media (max-width: 768px) {
+    body {
+      padding: 1rem;
+    }
+    
+    table {
+      font-size: 0.9rem;
+    }
+    
+    th, td {
+      padding: 0.75rem;
+    }
+  }

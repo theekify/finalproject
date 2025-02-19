@@ -14,7 +14,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $worker = $stmt->fetch(PDO::FETCH_ASSOC);
 
     if ($worker && password_verify($password, $worker['User_Password'])) {
-        if ($worker['User_Status'] === 'Approved') {
+        
             // Set session variables
             $_SESSION['user_id'] = $worker['User_ID'];
             $_SESSION['user_role'] = $worker['User_Role'];
@@ -28,7 +28,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } else {
         echo "Invalid email or password.";
     }
-}
+
 ?>
 
 <!DOCTYPE html>

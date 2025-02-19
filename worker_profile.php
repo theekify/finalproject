@@ -1,17 +1,10 @@
 <?php
-session_start();
-
-// Check if the user is logged in and is a worker
-if (!isset($_SESSION['user_id']) || $_SESSION['user_role'] !== 'Worker') {
-    header('Location: worker_login.php');
-    exit();
-}
 
 require 'db.php';
 
 // Fetch worker details
 $stmt = $conn->prepare("SELECT * FROM worker WHERE User_ID = ?");
-$stmt->execute([$_SESSION['user_id']]);
+$stmt->execute([$_GET['user_id']]);
 $worker = $stmt->fetch(PDO::FETCH_ASSOC);
 
 // Handle profile update
@@ -28,7 +21,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // Update worker profile
     $stmt = $conn->prepare("UPDATE worker SET Passport_Number = ?, Visa_Number = ?, Health_Report = ? WHERE User_ID = ?");
-    $stmt->execute([$passport_number, $visa_number, $health_report, $_SESSION['user_id']]);
+    $stmt->execute([$passport_number, $visa_number, $health_report, $_GET['user_id']]);
 
     echo "Profile updated successfully! Wait for staff approval.";
 }

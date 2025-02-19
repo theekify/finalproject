@@ -13,6 +13,8 @@ $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
 <html>
 <head>
     <title>User Activity Logs</title>
+    <link rel="stylesheet" href="admin_user_activity.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 <body>
     <h1>User Activity Logs</h1>
