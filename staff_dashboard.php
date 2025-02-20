@@ -4,50 +4,59 @@ require 'db.php';
 
 // Fetch staff details
 $stmt = $conn->prepare("SELECT * FROM staff WHERE User_ID = ?");
-$stmt->execute([1]); // Assuming a default user ID for demonstration
+$stmt->execute([1]); // Replace 1 with the actual user ID you want to fetch
 $staff = $stmt->fetch(PDO::FETCH_ASSOC);
 ?>
 
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Staff Dashboard</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-        }
-        ul {
-            list-style-type: none;
-            padding: 0;
-        }
-        li {
-            margin: 10px 0;
-        }
-        a {
-            text-decoration: none;
-            color: #007BFF;
-            font-weight: bold;
-        }
-        a:hover {
-            text-decoration: underline;
-        }
-    </style>
+    <link rel="stylesheet" href="staff_dash.css">
 </head>
 <body>
-    <h1>Welcome, <?php echo $staff['Staff_Name']; ?>!</h1>
-    <p>Email: example@example.com</p> <!-- Placeholder email -->
-    <p>Role: Staff</p> <!-- Placeholder role -->
+    <header class="header">
+        <h1>Staff Dashboard</h1>
+    </header>
 
-    <h2>Staff Functions</h2>
-    <ul>
-        <li><a href="staff_approve_worker.php">Approve Worker Profiles</a></li>
-        <li><a href="staff_approve_agency.php">Approve Agency Profiles</a></li>
-        <li><a href="staff_assign_training.php">Assign Workers to Training</a></li>
-        <li><a href="staff_issue_certificates.php">Issue Certificates</a></li>
-        <li><a href="staff_monitor_complaints.php">Monitor Complaints</a></li>
-    </ul>
+    <div class="container">
+        <div class="dashboard-grid">
+            <div class="card">
+                <h2>Training Management</h2>
+                <div class="card-links">
+                    <a href="staff_assign_training.php" class="card-link">Assign Training</a>
+                    <a href="staff_issue_certificates.php" class="card-link">Issue Certificates</a>
+                </div>
+            </div>
 
-    <a href="logout.php">Logout</a>
+            <div class="card">
+                <h2>Job Verification</h2>
+                <div class="card-links">
+                    <a href="staff_verify_jobs.php" class="card-link">Verify Job Postings</a>
+                    <a href="staff_track_verifications.php" class="card-link">Track Verifications</a>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>Complaint Management</h2>
+                <div class="card-links">
+                    <a href="staff_monitor_complaints.php" class="card-link">Monitor Complaints</a>
+                    <a href="staff_resolve_issues.php" class="card-link">Resolve Issues</a>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>Staff Profile</h2>
+                <div class="card-links">
+                    <a href="staff_view_profile.php" class="card-link">View/Edit Profile</a>
+                    <a href="staff_performance.php" class="card-link">Performance Metrics</a>
+                </div>
+            </div>
+        </div>
+
+        <a href="logout.php" class="logout-button">Logout</a>
+    </div>
 </body>
 </html>

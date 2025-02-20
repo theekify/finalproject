@@ -1,4 +1,6 @@
 <?php
+session_start();
+
 require 'db.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -13,24 +15,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $admin = $stmt->fetch(PDO::FETCH_ASSOC);
 
     if ($admin && password_verify($password, $admin['User_Password'])) {
-       
-            // Redirect to admin dashboard
-            header('Location: admin_dashboard.php');
-        } else {
-            echo "Your account is pending approval.";
-        }
+        // Set session variables
+        $_SESSION['user_id'] = $admin['User_ID'];
+        $_SESSION['user_role'] = $admin['User_Role'];
+        $_SESSION['user_email'] = $admin['User_Email'];
+
+        // Redirect to admin dashboard
+        header('Location: admin_dashboard.php');
     } else {
         echo "Invalid email or password.";
     }
-
+}
 ?>
 
 <!DOCTYPE html>
 <html>
 <head>
     <title>Admin Login</title>
-    <link rel="stylesheet" href="admin_login.css">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 <body>
     <h1>Admin Login</h1>

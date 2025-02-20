@@ -1,6 +1,7 @@
 <?php
-require 'db.php';
 session_start();
+
+require 'db.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $email = $_POST['email'];
@@ -14,21 +15,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $staff = $stmt->fetch(PDO::FETCH_ASSOC);
 
     if ($staff && password_verify($password, $staff['User_Password'])) {
-        
-            // Set session variables
-            $_SESSION['user_id'] = $staff['User_ID'];
-            $_SESSION['user_role'] = $staff['User_Role'];
-            $_SESSION['user_email'] = $staff['User_Email'];
+        // Set session variables
+        $_SESSION['user_id'] = $staff['User_ID'];
+        $_SESSION['user_role'] = $staff['User_Role'];
+        $_SESSION['user_email'] = $staff['User_Email'];
 
-            // Redirect to staff dashboard
-            header('Location: staff_dashboard.php');
-        } else {
-            echo "Your account is pending approval.";
-        }
+        // Redirect to staff dashboard
+        header('Location: staff_dashboard.php');
     } else {
         echo "Invalid email or password.";
     }
-
+}
 ?>
 
 <!DOCTYPE html>

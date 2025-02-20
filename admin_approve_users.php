@@ -1,16 +1,9 @@
 <?php
-session_start();
-
-// Check if the user is logged in and is an admin
-if (!isset($_SESSION['user_id']) || $_SESSION['user_role'] !== 'Admin') {
-    header('Location: admin_login.php');
-    exit();
-}
 
 require 'db.php';
 
 // Fetch pending users
-$stmt = $conn->prepare("SELECT * FROM user WHERE User_Status = 'Pending'");
+$stmt = $conn->prepare("SELECT * FROM user WHERE User_Status = 'Approved'");
 $stmt->execute();
 $pending_users = $stmt->fetchAll(PDO::FETCH_ASSOC);
 

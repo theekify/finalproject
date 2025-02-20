@@ -1,6 +1,7 @@
 <?php
-require 'db.php';
 session_start();
+
+require 'db.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $email = $_POST['email'];
@@ -14,21 +15,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $agency = $stmt->fetch(PDO::FETCH_ASSOC);
 
     if ($agency && password_verify($password, $agency['User_Password'])) {
-        
-            // Set session variables
-            $_SESSION['user_id'] = $agency['User_ID'];
-            $_SESSION['user_role'] = $agency['User_Role'];
-            $_SESSION['user_email'] = $agency['User_Email'];
+        // Set session variables
+        $_SESSION['user_id'] = $agency['User_ID'];
+        $_SESSION['user_role'] = $agency['User_Role'];
+        $_SESSION['user_email'] = $agency['User_Email'];
 
-            // Redirect to agency dashboard
-            header('Location: agency_dashboard.php');
-        } else {
-            echo "Your account is pending approval.";
-        }
+        // Redirect to agency dashboard
+        header('Location: agency_dashboard.php');
     } else {
         echo "Invalid email or password.";
     }
-
+}
 ?>
 
 <!DOCTYPE html>

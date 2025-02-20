@@ -9,29 +9,38 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $address = $_POST['address'];
     $role = $_POST['role'];
 
-    // Insert into user table
-    $stmt = $conn->prepare("INSERT INTO user (User_Name, User_Email, User_Password, User_Phone, User_Address, User_Role, User_Status) VALUES (?, ?, ?, ?, ?, ?, 'Pending')");
-    $stmt->execute([$name, $email, $password, $phone, $address, $role]);
+    // Check if email already exists
+    $stmt = $conn->prepare("SELECT COUNT(*) FROM user WHERE User_Email = ?");
+    $stmt->execute([$email]);
+    $emailExists = $stmt->fetchColumn();
 
-    // Get the last inserted User_ID
-    $user_id = $conn->lastInsertId();
+    if ($emailExists) {
+        echo "Email already exists. Please use a different email.";
+    } else {
+        // Insert into user table
+        $stmt = $conn->prepare("INSERT INTO user (User_Name, User_Email, User_Password, User_Phone, User_Address, User_Role, User_Status) VALUES (?, ?, ?, ?, ?, ?, 'Approved')");
+        $stmt->execute([$name, $email, $password, $phone, $address, $role]);
 
-    // Insert into respective table based on role
-    if ($role === 'Admin') {
-        $stmt = $conn->prepare("INSERT INTO admin (User_ID, Admin_Name, Admin_Email, Admin_Phone, Admin_Status) VALUES (?, ?, ?, ?, 'Active')");
-        $stmt->execute([$user_id, $name, $email, $phone]);
-    } elseif ($role === 'Staff') {
-        $stmt = $conn->prepare("INSERT INTO staff (User_ID, Staff_Name, Staff_Email, Staff_Phone, Staff_Address, Staff_Status) VALUES (?, ?, ?, ?, ?, 'Pending')");
-        $stmt->execute([$user_id, $name, $email, $phone, $address]);
-    } elseif ($role === 'Agency') {
-        $stmt = $conn->prepare("INSERT INTO agency (User_ID, Agency_Name, Agency_Address, License_Number, Approval_Status) VALUES (?, ?, ?, '', 'Pending')");
-        $stmt->execute([$user_id, $name, $address]);
-    } elseif ($role === 'Worker') {
-        $stmt = $conn->prepare("INSERT INTO worker (User_ID, Passport_Number, Visa_Number, Health_Report, Training_Status, Insurance_Status) VALUES (?, '', '', 'Pending', 'In Progress', 'Inactive')");
-        $stmt->execute([$user_id]);
+        // Get the last inserted User_ID
+        $user_id = $conn->lastInsertId();
+
+        // Insert into respective table based on role
+        if ($role === 'Admin') {
+            $stmt = $conn->prepare("INSERT INTO admin (User_ID, Admin_Name, Admin_Email, Admin_Phone, Admin_Status) VALUES (?, ?, ?, ?, 'Active')");
+            $stmt->execute([$user_id, $name, $email, $phone]);
+        } elseif ($role === 'Staff') {
+            $stmt = $conn->prepare("INSERT INTO staff (User_ID, Staff_Name, Staff_Email, Staff_Phone, Staff_Address, Staff_Status) VALUES (?, ?, ?, ?, ?, 'Approved')");
+            $stmt->execute([$user_id, $name, $email, $phone, $address]);
+        } elseif ($role === 'Agency') {
+            $stmt = $conn->prepare("INSERT INTO agency (User_ID, Agency_Name, Agency_Address, License_Number, Approval_Status) VALUES (?, ?, ?, '', 'Approved')");
+            $stmt->execute([$user_id, $name, $address]);
+        } elseif ($role === 'Worker') {
+            $stmt = $conn->prepare("INSERT INTO worker (User_ID, Passport_Number, Visa_Number, Health_Report, Training_Status, Insurance_Status) VALUES (?, NULL, NULL, 'Pending', 'In Progress', 'Inactive')");
+            $stmt->execute([$user_id]);
+        }
+
+        echo "Registration successful! You can now log in.";
     }
-
-    echo "Registration successful! Wait for admin approval.";
 }
 ?>
 
@@ -66,11 +75,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <option value="Admin">Admin</option>
                 <option value="Staff">Staff</option>
                 <option value="Agency">Agency</option>
-                <option value="Worker" selected>Worker</option>
+                <option value="Worker">Worker</option>
             </select>
             
             <button type="submit">Register</button>
         </form>
+        <p>Already have an account? <a href="login.php">Login here</a>.</p>
     </div>
 </body>
-</html>
+</html>>
