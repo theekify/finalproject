@@ -1,17 +1,10 @@
 <?php
-session_start();
-
-// Check if the user is logged in and is an agency
-if (!isset($_SESSION['user_id']) || $_SESSION['user_role'] !== 'Agency') {
-    header('Location: agency_login.php');
-    exit();
-}
 
 require 'db.php';
 
 // Fetch agency details
 $stmt = $conn->prepare("SELECT * FROM agency WHERE User_ID = ?");
-$stmt->execute([$_SESSION['user_id']]);
+$stmt->execute([$_GET['user_id']]);
 $agency = $stmt->fetch(PDO::FETCH_ASSOC);
 
 // Handle profile update
@@ -20,7 +13,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // Update agency profile
     $stmt = $conn->prepare("UPDATE agency SET License_Number = ? WHERE User_ID = ?");
-    $stmt->execute([$license_number, $_SESSION['user_id']]);
+    $stmt->execute([$license_number, $_GET['user_id']]);
 
     echo "Profile updated successfully! Wait for staff approval.";
 }

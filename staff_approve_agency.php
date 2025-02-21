@@ -1,11 +1,4 @@
 <?php
-session_start();
-
-// Check if the user is logged in and is a staff member
-if (!isset($_SESSION['user_id']) || $_SESSION['user_role'] !== 'Staff') {
-    header('Location: staff_login.php');
-    exit();
-}
 
 require 'db.php';
 

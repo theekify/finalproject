@@ -1,14 +1,23 @@
 <?php
-
+session_start();
 require 'db.php';
+
+// Ensure user_id is set
+$user_id = isset($_SESSION['user_id']) ? $_SESSION['user_id'] : null;
+
+// Fetch worker details using user_id
+$stmt = $conn->prepare("SELECT * FROM worker WHERE User_ID = ?");
+$stmt->execute([$user_id]);
+$worker = $stmt->fetch(PDO::FETCH_ASSOC);
+$worker_id = $worker ? $worker['Worker_ID'] : null;
 
 // Handle complaint submission
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $description = $_POST['description'];
 
     // Insert complaint into the database
-    $stmt = $conn->prepare("INSERT INTO complaints (Description, Status) VALUES (?, 'Pending')");
-    $stmt->execute([$description]);
+    $stmt = $conn->prepare("INSERT INTO complaints (Worker_ID, Description, Status) VALUES (?, ?, 'Pending')");
+    $stmt->execute([$worker_id, $description]);
 
     echo "Complaint submitted successfully! Wait for staff resolution.";
 }

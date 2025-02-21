@@ -1,6 +1,5 @@
 <?php
 
-
 require 'db.php';
 
 // Fetch workers and training programs
