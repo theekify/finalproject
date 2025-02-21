@@ -147,6 +147,8 @@ $courses = $conn->query("SELECT * FROM training WHERE Training_Status = 'Open'")
                         <th>Course ID</th>
                         <th>Course Name</th>
                         <th>Course Description</th>
+                        <th>Course Duration</th>
+                        <th>Course Location</th>
                         <th>Action</th>
                     </tr>
                 </thead>
@@ -156,6 +158,8 @@ $courses = $conn->query("SELECT * FROM training WHERE Training_Status = 'Open'")
                         <td><?php echo htmlspecialchars($course['Training_ID']); ?></td>
                         <td><?php echo htmlspecialchars($course['Training_Name']); ?></td>
                         <td><?php echo htmlspecialchars($course['Training_Description']); ?></td>
+                        <td><?php echo htmlspecialchars($course['Training_Duration']); ?></td>
+                        <td><?php echo htmlspecialchars($course['Training_Location']); ?></td>
                         <td>
                             <form method="POST">
                                 <input type="hidden" name="course_id" value="<?php echo htmlspecialchars($course['Training_ID']); ?>">

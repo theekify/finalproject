@@ -26,6 +26,7 @@ $staff = $stmt->fetch(PDO::FETCH_ASSOC);
             <div class="card">
                 <h2>Training Management</h2>
                 <div class="card-links">
+                    <a href="staff_post_course.php" class="card-link">Post a course</a>
                     <a href="staff_assign_training.php" class="card-link">Assign Training</a>
                     <a href="staff_issue_certificates.php" class="card-link">Issue Certificates</a>
                 </div>
