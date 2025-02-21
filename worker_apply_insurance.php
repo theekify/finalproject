@@ -18,17 +18,34 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 ?>
 
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Apply for Insurance</title>
+    <link rel="stylesheet" href="worker_apply_insu.css">
 </head>
 <body>
-    <h1>Apply for Insurance</h1>
-    <form method="POST">
-        Policy Number: <input type="text" name="policy_number" required><br>
-        Provider Name: <input type="text" name="provider_name" required><br>
-        Premium: <input type="number" name="premium" required><br>
-        <button type="submit">Apply</button>
-    </form>
+    <div class="container">
+        <h1>Apply for Insurance</h1>
+        
+
+        <form method="POST" class="insurance-form">
+            <div class="form-group">
+                <label for="policy_number">Policy Number:</label>
+                <input type="text" id="policy_number" name="policy_number" required>
+            </div>
+            <div class="form-group">
+                <label for="provider_name">Provider Name:</label>
+                <input type="text" id="provider_name" name="provider_name" required>
+            </div>
+            <div class="form-group">
+                <label for="premium">Premium:</label>
+                <input type="number" id="premium" name="premium" required>
+            </div>
+            <button type="submit">Apply</button>
+        </form>
+        <a href="worker_dashboard.php" class="back-link">Back to Dashboard</a>
+    </div>
 </body>
 </html>
