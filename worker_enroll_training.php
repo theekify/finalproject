@@ -16,7 +16,7 @@ $trainings = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 // Handle training enrollment
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $training_id = $_POST['training_id'];
+    $training_id = $_POST['training_id'];       
 
     // Enroll worker in training program
     $stmt = $conn->prepare("UPDATE worker SET Training_Status = 'In Progress' WHERE Worker_ID = ?");
