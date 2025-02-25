@@ -44,15 +44,15 @@ $staff = $stmt->fetch(PDO::FETCH_ASSOC);
                 <h2>Complaint Management</h2>
                 <div class="card-links">
                     <a href="staff_monitor_complaints.php" class="card-link">Monitor Complaints</a>
-                    <a href="staff_resolve_issues.php" class="card-link">Resolve Issues</a>
+                
                 </div>
             </div>
 
             <div class="card">
                 <h2>Staff Profile</h2>
                 <div class="card-links">
-                    <a href="staff_view_profile.php" class="card-link">View/Edit Profile</a>
-                    <a href="staff_performance.php" class="card-link">Performance Metrics</a>
+                    <a href="staff_profile.php" class="card-link">View/Edit Profile</a>
+                  
                 </div>
             </div>
         </div>

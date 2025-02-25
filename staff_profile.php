@@ -1,17 +1,9 @@
 <?php
-session_start();
-
-// Check if the user is logged in and is a staff member
-if (!isset($_SESSION['user_id']) || $_SESSION['user_role'] !== 'Staff') {
-    header('Location: staff_login.php');
-    exit();
-}
-
 require 'db.php';
 
 // Fetch staff details
 $stmt = $conn->prepare("SELECT * FROM staff WHERE User_ID = ?");
-$stmt->execute([$_SESSION['user_id']]);
+$stmt->execute([$_GET['user_id']]);
 $staff = $stmt->fetch(PDO::FETCH_ASSOC);
 
 // Handle profile update
@@ -23,7 +15,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // Update staff profile
     $stmt = $conn->prepare("UPDATE staff SET Staff_Name = ?, Staff_Email = ?, Staff_Phone = ?, Staff_Address = ? WHERE User_ID = ?");
-    $stmt->execute([$name, $email, $phone, $address, $_SESSION['user_id']]);
+    $stmt->execute([$name, $email, $phone, $address, $_GET['user_id']]);
 
     echo "Profile updated successfully!";
 }

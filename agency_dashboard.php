@@ -48,13 +48,7 @@ $agency = $stmt->fetch(PDO::FETCH_ASSOC);
                     <li><a href="agency_performance.php">Performance Metrics</a></li>
                 </ul>
             </div>
-            <div class="dashboard-card">
-                <h2>Support</h2>
-                <ul>
-                    <li><a href="agency_support.php">Contact Support</a></li>
-                    <li><a href="agency_faq.php">FAQ</a></li>
-                </ul>
-            </div>
+            
         </main>
         <a href="logout.php" class="logout-link">Logout</a>
     </div>

@@ -1,10 +1,10 @@
 <?php
 require 'db.php';
 
-// Fetch system activity data
-$stmt = $conn->prepare("SELECT * FROM user");
+// Fetch feedback from agencies
+$stmt = $conn->prepare("SELECT f.Feedback_ID, f.Feedback, f.Created_At, a.Agency_Name FROM feedback f JOIN agency a ON f.Agency_ID = a.Agency_ID");
 $stmt->execute();
-$users = $stmt->fetchAll(PDO::FETCH_ASSOC);
+$feedbacks = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
 <!DOCTYPE html>
@@ -12,18 +12,17 @@ $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Generate Reports</title>
+    <title>Agency Feedback</title>
     <style>
         :root {
             --primary: #6b1950;
             --primary-light: #fff5f5;
             --primary-dark: #4a1237;
+            --secondary: #2c3e50;
+            --text-dark: #2d1422;
+            --text-light: #666666;
             --white: #ffffff;
             --border: #e5e7eb;
-            --text-dark: #2d1422;
-            --success: #10b981;
-            --warning: #f59e0b;
-            --danger: #ef4444;
             --shadow: 0 4px 20px rgba(107, 25, 80, 0.1);
         }
 
@@ -38,7 +37,7 @@ $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
             background-color: var(--primary-light);
             color: var(--text-dark);
             line-height: 1.6;
-            padding: 2rem;
+            padding: 20px;
         }
 
         .container {
@@ -47,66 +46,55 @@ $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
             background-color: var(--white);
             border-radius: 8px;
             box-shadow: var(--shadow);
-            padding: 2rem;
+            padding: 30px;
         }
 
         h1 {
             color: var(--primary);
             font-size: 24px;
-            margin-bottom: 1.5rem;
+            margin-bottom: 20px;
             text-align: center;
         }
 
-        .report-table {
+        .feedback-table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 1rem;
-            background-color: var(--white);
-            box-shadow: var(--shadow);
+            margin-top: 20px;
         }
 
-        .report-table th,
-        .report-table td {
+        .feedback-table th,
+        .feedback-table td {
             padding: 12px;
             text-align: left;
             border-bottom: 1px solid var(--border);
         }
 
-        .report-table th {
+        .feedback-table th {
             background-color: var(--primary);
             color: var(--white);
             font-weight: bold;
             text-transform: uppercase;
-            font-size: 14px;
         }
 
-        .report-table tr:nth-child(even) {
+        .feedback-table tr:nth-child(even) {
             background-color: var(--primary-light);
         }
 
-        .report-table tr:hover {
+        .feedback-table tr:hover {
             background-color: rgba(107, 25, 80, 0.1);
         }
 
-        .status-active {
-            color: var(--success);
-            font-weight: bold;
-        }
-
-        .status-inactive {
-            color: var(--danger);
-            font-weight: bold;
-        }
-
-        .status-pending {
-            color: var(--warning);
-            font-weight: bold;
+        .feedback-content {
+            max-width: 300px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
         .back-link {
             display: block;
             text-align: center;
-            margin-top: 1.5rem;
+            margin-top: 20px;
             color: var(--primary);
             text-decoration: none;
             font-weight: bold;
@@ -118,60 +106,45 @@ $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
         }
 
         @media (max-width: 768px) {
-            body {
-                padding: 1rem;
-            }
-
             .container {
-                padding: 1rem;
+                padding: 15px;
             }
 
-            .report-table {
+            .feedback-table {
                 font-size: 14px;
             }
 
-            .report-table th,
-            .report-table td {
+            .feedback-table th,
+            .feedback-table td {
                 padding: 8px;
             }
 
-            /* Make table scrollable on mobile */
-            .table-container {
-                overflow-x: auto;
-                margin: 0 -1rem;
-                padding: 0 1rem;
-            }
-
-            .report-table {
-                min-width: 600px;
+            .feedback-content {
+                max-width: 150px;
             }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>System Activity Report</h1>
-        <div class="table-container">
-            <table class="report-table">
+        <h1>Agency Feedback</h1>
+        <div class="table-responsive">
+            <table class="feedback-table">
                 <thead>
                     <tr>
-                        <th>User ID</th>
-                        <th>Name</th>
-                        <th>Email</th>
-                        <th>Role</th>
-                        <th>Status</th>
+                        <th>Feedback ID</th>
+                        <th>Agency Name</th>
+                        <th>Feedback</th>
+                        <th>Submitted At</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <?php foreach ($users as $user): ?>
+                    <?php foreach ($feedbacks as $feedback): ?>
                     <tr>
-                        <td><?php echo htmlspecialchars($user['User_ID']); ?></td>
-                        <td><?php echo htmlspecialchars($user['User_Name']); ?></td>
-                        <td><?php echo htmlspecialchars($user['User_Email']); ?></td>
-                        <td><?php echo htmlspecialchars($user['User_Role']); ?></td>
-                        <td class="status-<?php echo strtolower($user['User_Status']); ?>">
-                            <?php echo htmlspecialchars($user['User_Status']); ?>
-                        </td>
+                        <td><?php echo htmlspecialchars($feedback['Feedback_ID']); ?></td>
+                        <td><?php echo htmlspecialchars($feedback['Agency_Name']); ?></td>
+                        <td class="feedback-content"><?php echo htmlspecialchars($feedback['Feedback']); ?></td>
+                        <td><?php echo htmlspecialchars($feedback['Created_At']); ?></td>
                     </tr>
                     <?php endforeach; ?>
                 </tbody>
