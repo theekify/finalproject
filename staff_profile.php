@@ -18,6 +18,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $stmt->execute([$name, $email, $phone, $address, $_GET['user_id']]);
 
     echo "Profile updated successfully!";
+
 }
 ?>
 

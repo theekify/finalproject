@@ -10,47 +10,241 @@ $agency = $stmt->fetch(PDO::FETCH_ASSOC);
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Agency Dashboard</title>
-    <link rel="stylesheet" href="agency_dashboard.css">
+<style>
+        :root {
+            --primary: #6b1950;
+            --primary-light: #f8f9fc;
+            --text-primary: #1a1a1a;
+            --text-secondary: #666666;
+            --border: #e5e7eb;
+            --background: #f1f5f9;
+            --white: #ffffff;
+            --shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            --radius: 8px;
+            --sidebar-width: 250px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        body {
+            background-color: var(--background);
+            min-height: 100vh;
+            display: flex;
+        }
+
+        .sidebar {
+            width: var(--sidebar-width);
+            background-color: var(--primary);
+            color: var(--white);
+            padding: 1.5rem;
+            height: 100vh;
+            position: fixed;
+            left: 0;
+            top: 0;
+            overflow-y: auto;
+        }
+
+        .sidebar-header {
+            margin-bottom: 2rem;
+        }
+
+        .sidebar-header h1 {
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .sidebar-nav {
+            list-style: none;
+        }
+
+        .sidebar-nav li {
+            margin-bottom: 0.5rem;
+        }
+
+        .sidebar-nav a {
+            display: block;
+            padding: 0.75rem;
+            color: var(--white);
+            text-decoration: none;
+            border-radius: var(--radius);
+            transition: background-color 0.2s;
+        }
+
+        .sidebar-nav a:hover,
+        .sidebar-nav a.active {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .main-content {
+            flex: 1;
+            margin-left: var(--sidebar-width);
+            padding: 2rem;
+        }
+
+        .header {
+            background-color: var(--white);
+            border-bottom: 1px solid var(--border);
+            padding: 1.5rem 0;
+            margin-bottom: 2rem;
+        }
+
+        .header h1 {
+            color: var(--primary);
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .card {
+            background: var(--white);
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow);
+            transition: transform 0.2s;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+        .card h2 {
+            color: var(--text-primary);
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .card-links {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .card-link {
+            display: block;
+            padding: 0.75rem;
+            text-decoration: none;
+            color: var(--text-primary);
+            border-radius: var(--radius);
+            transition: all 0.2s;
+        }
+
+        .card-link:hover {
+            background: var(--primary-light);
+            color: var(--primary);
+        }
+
+        .logout-button {
+            display: inline-block;
+            padding: 0.75rem 1.5rem;
+            background: var(--white);
+            color: var(--primary);
+            border: 1px solid var(--primary);
+            border-radius: var(--radius);
+            font-size: 0.875rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-decoration: none;
+            margin-top: 1rem;
+        }
+
+        .logout-button:hover {
+            background: var(--primary);
+            color: var(--white);
+        }
+
+        @media (max-width: 768px) {
+            body {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: static;
+                padding: 1rem;
+            }
+
+            .main-content {
+                margin-left: 0;
+                padding: 1rem;
+            }
+
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
 </head>
 <body>
-    <header>
-        <div class="container">
-            <div class="header-content">
-                <h1>Agency Dashboard</h1>
-                
-            </div>
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <h1>Agency Dashboard</h1>
         </div>
-    </header>
+        <nav class="sidebar-nav">
+            <ul>
+                <li><a href="#" class="active">Dashboard</a></li>
+                <li><a href="#">Job Management</a></li>
+                <li><a href="#">Candidate Interaction</a></li>
+                <li><a href="#">Agency Profile</a></li>
+            </ul>
+        </nav>
+    </div>
 
-    <div class="container">
-        <main>
-            <div class="dashboard-card">
-                <h2>Job Management</h2>
-                <ul>
-                    <li><a href="agency_post_job.php">Post Job Offer</a></li>
-                    <li><a href="agency_track_applications.php">Track Job Applications</a></li>
-                </ul>
+    <div class="main-content">
+        
+        </header>
+
+        <main class="container">
+            <div class="dashboard-grid">
+                <div class="card">
+                    <h2>Job Management</h2>
+                    <div class="card-links">
+                        <a href="post_job.php" class="card-link">Post Job Offer</a>
+                        <a href="track_applications.php" class="card-link">Track Job Applications</a>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h2>Candidate Interaction</h2>
+                    <div class="card-links">
+                        <a href="schedule_interviews.php" class="card-link">Schedule Interviews</a>
+                        <a href="submit_feedback.php" class="card-link">Submit Feedback</a>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h2>Agency Profile</h2>
+                    <div class="card-links">
+                        <a href="edit_profile.php" class="card-link">View/Edit Profile</a>
+                        <a href="metrics.php" class="card-link">Performance Metrics</a>
+                    </div>
+                </div>
             </div>
-            <div class="dashboard-card">
-                <h2>Candidate Interaction</h2>
-                <ul>
-                    <li><a href="agency_schedule_interview.php">Schedule Interviews</a></li>
-                    <li><a href="agency_submit_feedback.php">Submit Feedback</a></li>
-                </ul>
-            </div>
-            <div class="dashboard-card">
-                <h2>Agency Profile</h2>
-                <ul>
-                    <li><a href="agency_profile.php">View/Edit Profile</a></li>
-                    <li><a href="agency_performance.php">Performance Metrics</a></li>
-                </ul>
-            </div>
-            
+
+            <a href="logout.php" class="logout-button">Logout</a>
         </main>
-        <a href="logout.php" class="logout-link">Logout</a>
     </div>
 </body>
 </html>
+
