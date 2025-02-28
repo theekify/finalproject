@@ -16,72 +16,55 @@ $feedbacks = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <style>
         :root {
             --primary: #6b1950;
-            --primary-light: #fff5f5;
-            --primary-dark: #4a1237;
-            --secondary: #2c3e50;
-            --text-dark: #2d1422;
-            --text-light: #666666;
-            --white: #ffffff;
+            --primary-light: #f8f9fc;
+            --text-primary: #1a1a1a;
+            --text-secondary: #666666;
             --border: #e5e7eb;
-            --shadow: 0 4px 20px rgba(107, 25, 80, 0.1);
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: Arial, sans-serif;
+            --background: #f1f5f9;
+            --white: #ffffff;
+            --shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            --radius: 8px;
         }
 
         body {
-            background-color: var(--primary-light);
-            color: var(--text-dark);
-            line-height: 1.6;
-            padding: 20px;
+            background-color: var(--background);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            margin: 0;
+            padding: 0;
         }
 
         .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            background-color: var(--white);
-            border-radius: 8px;
-            box-shadow: var(--shadow);
-            padding: 30px;
+            padding: 2rem;
         }
 
         h1 {
             color: var(--primary);
-            font-size: 24px;
-            margin-bottom: 20px;
+            margin-bottom: 1.5rem;
             text-align: center;
         }
 
         .feedback-table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 20px;
+            background-color: var(--white);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
         }
 
-        .feedback-table th,
-        .feedback-table td {
-            padding: 12px;
+        .feedback-table th, .feedback-table td {
+            padding: 1rem;
             text-align: left;
             border-bottom: 1px solid var(--border);
         }
 
         .feedback-table th {
-            background-color: var(--primary);
-            color: var(--white);
-            font-weight: bold;
-            text-transform: uppercase;
-        }
-
-        .feedback-table tr:nth-child(even) {
             background-color: var(--primary-light);
+            color: var(--primary);
+            font-weight: 600;
         }
 
         .feedback-table tr:hover {
-            background-color: rgba(107, 25, 80, 0.1);
+            background-color: var(--primary-light);
         }
 
         .feedback-content {
@@ -92,31 +75,35 @@ $feedbacks = $stmt->fetchAll(PDO::FETCH_ASSOC);
         }
 
         .back-link {
-            display: block;
-            text-align: center;
-            margin-top: 20px;
-            color: var(--primary);
+            display: inline-block;
+            margin-top: 1.5rem;
+            padding: 0.75rem 1.5rem;
+            background-color: var(--primary);
+            color: var(--white);
             text-decoration: none;
-            font-weight: bold;
-            transition: color 0.3s ease;
+            border-radius: var(--radius);
+            font-size: 0.875rem;
+            font-weight: 500;
+            transition: all 0.2s;
+            text-align: center;
         }
 
         .back-link:hover {
-            color: var(--primary-dark);
+            background-color: var(--primary);
+            opacity: 0.9;
         }
 
         @media (max-width: 768px) {
             .container {
-                padding: 15px;
+                padding: 1rem;
             }
 
             .feedback-table {
                 font-size: 14px;
             }
 
-            .feedback-table th,
-            .feedback-table td {
-                padding: 8px;
+            .feedback-table th, .feedback-table td {
+                padding: 0.75rem;
             }
 
             .feedback-content {
@@ -128,28 +115,26 @@ $feedbacks = $stmt->fetchAll(PDO::FETCH_ASSOC);
 <body>
     <div class="container">
         <h1>Agency Feedback</h1>
-        <div class="table-responsive">
-            <table class="feedback-table">
-                <thead>
-                    <tr>
-                        <th>Feedback ID</th>
-                        <th>Agency Name</th>
-                        <th>Feedback</th>
-                        <th>Submitted At</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php foreach ($feedbacks as $feedback): ?>
-                    <tr>
-                        <td><?php echo htmlspecialchars($feedback['Feedback_ID']); ?></td>
-                        <td><?php echo htmlspecialchars($feedback['Agency_Name']); ?></td>
-                        <td class="feedback-content"><?php echo htmlspecialchars($feedback['Feedback']); ?></td>
-                        <td><?php echo htmlspecialchars($feedback['Created_At']); ?></td>
-                    </tr>
-                    <?php endforeach; ?>
-                </tbody>
-            </table>
-        </div>
+        <table class="feedback-table">
+            <thead>
+                <tr>
+                    <th>Feedback ID</th>
+                    <th>Agency Name</th>
+                    <th>Feedback</th>
+                    <th>Submitted At</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php foreach ($feedbacks as $feedback): ?>
+                <tr>
+                    <td><?php echo htmlspecialchars($feedback['Feedback_ID']); ?></td>
+                    <td><?php echo htmlspecialchars($feedback['Agency_Name']); ?></td>
+                    <td class="feedback-content"><?php echo htmlspecialchars($feedback['Feedback']); ?></td>
+                    <td><?php echo htmlspecialchars($feedback['Created_At']); ?></td>
+                </tr>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
         <a href="admin_dashboard.php" class="back-link">Back to Dashboard</a>
     </div>
 </body>

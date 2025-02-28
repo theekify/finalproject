@@ -10,16 +10,20 @@ $agency = $stmt->fetch(PDO::FETCH_ASSOC);
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agency Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
         :root {
             --primary: #6b1950;
             --primary-light: #f8f9fc;
-            --text-primary: #1a1a1a;
+            --text-primary: #333333;
             --text-secondary: #666666;
             --border: #e5e7eb;
-            --background: #f1f5f9;
+            --background: #f5f5f5;
             --white: #ffffff;
-            --shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            --shadow: 0 1px 2px rgba(0,0,0,0.05);
             --radius: 8px;
             --sidebar-width: 250px;
         }
@@ -39,14 +43,17 @@ $agency = $stmt->fetch(PDO::FETCH_ASSOC);
 
         .sidebar {
             width: var(--sidebar-width);
-            background-color: var(--primary);
-            color: var(--white);
+            background-color: var(--white);
+            color: var(--text-primary);
             padding: 1.5rem;
             height: 100vh;
             position: fixed;
             left: 0;
             top: 0;
             overflow-y: auto;
+            border-right: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
         }
 
         .sidebar-header {
@@ -54,12 +61,14 @@ $agency = $stmt->fetch(PDO::FETCH_ASSOC);
         }
 
         .sidebar-header h1 {
-            font-size: 1.5rem;
+            font-size: 1.25rem;
             font-weight: 600;
+            color: var(--primary);
         }
 
         .sidebar-nav {
             list-style: none;
+            flex-grow: 1;
         }
 
         .sidebar-nav li {
@@ -67,9 +76,11 @@ $agency = $stmt->fetch(PDO::FETCH_ASSOC);
         }
 
         .sidebar-nav a {
-            display: block;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
             padding: 0.75rem;
-            color: var(--white);
+            color: var(--text-primary);
             text-decoration: none;
             border-radius: var(--radius);
             transition: background-color 0.2s;
@@ -77,88 +88,18 @@ $agency = $stmt->fetch(PDO::FETCH_ASSOC);
 
         .sidebar-nav a:hover,
         .sidebar-nav a.active {
-            background-color: rgba(255, 255, 255, 0.1);
-        }
-
-        .main-content {
-            flex: 1;
-            margin-left: var(--sidebar-width);
-            padding: 2rem;
-        }
-
-        .header {
-            background-color: var(--white);
-            border-bottom: 1px solid var(--border);
-            padding: 1.5rem 0;
-            margin-bottom: 2rem;
-        }
-
-        .header h1 {
-            color: var(--primary);
-            font-size: 1.5rem;
-            font-weight: 600;
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .dashboard-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 1.5rem;
-            margin-bottom: 2rem;
-        }
-
-        .card {
-            background: var(--white);
-            border-radius: var(--radius);
-            padding: 1.5rem;
-            border: 1px solid var(--border);
-            box-shadow: var(--shadow);
-            transition: transform 0.2s;
-        }
-
-        .card:hover {
-            transform: translateY(-5px);
-        }
-
-        .card h2 {
-            color: var(--text-primary);
-            font-size: 1.25rem;
-            font-weight: 600;
-            margin-bottom: 1rem;
-            padding-bottom: 0.5rem;
-            border-bottom: 1px solid var(--border);
-        }
-
-        .card-links {
-            display: flex;
-            flex-direction: column;
-            gap: 0.75rem;
-        }
-
-        .card-link {
-            display: block;
-            padding: 0.75rem;
-            text-decoration: none;
-            color: var(--text-primary);
-            border-radius: var(--radius);
-            transition: all 0.2s;
-        }
-
-        .card-link:hover {
-            background: var(--primary-light);
+            background-color: var(--primary-light);
             color: var(--primary);
         }
 
         .logout-button {
-            display: inline-block;
-            padding: 0.75rem 1.5rem;
-            background: var(--white);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem;
+            background: var(--primary-light);
             color: var(--primary);
-            border: 1px solid var(--primary);
+            border: none;
             border-radius: var(--radius);
             font-size: 0.875rem;
             font-weight: 500;
@@ -171,6 +112,54 @@ $agency = $stmt->fetch(PDO::FETCH_ASSOC);
         .logout-button:hover {
             background: var(--primary);
             color: var(--white);
+        }
+
+        .main-content {
+            flex: 1;
+            margin-left: var(--sidebar-width);
+            padding: 2rem;
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .card {
+            background: var(--white);
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            box-shadow: var(--shadow);
+        }
+
+        .card h2 {
+            color: var(--primary);
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .card-links {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .card-link {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem;
+            text-decoration: none;
+            color: var(--text-primary);
+            border-radius: var(--radius);
+            transition: all 0.2s;
+        }
+
+        .card-link:hover {
+            background-color: var(--primary-light);
+            color: var(--primary);
         }
 
         @media (max-width: 768px) {
@@ -203,48 +192,50 @@ $agency = $stmt->fetch(PDO::FETCH_ASSOC);
         </div>
         <nav class="sidebar-nav">
             <ul>
-                <li><a href="#" class="active">Dashboard</a></li>
-                <li><a href="#">Job Management</a></li>
-                <li><a href="#">Candidate Interaction</a></li>
-                <li><a href="#">Agency Profile</a></li>
+                <li><a href="#" class="active"><i class="fas fa-tachometer-alt"></i>Dashboard</a></li>
+                <li><a href="#"><i class="fas fa-briefcase"></i>Job Management</a></li>
+                <li><a href="#"><i class="fas fa-users"></i>Candidate Interaction</a></li>
+                <li><a href="#"><i class="fas fa-user-circle"></i>Agency Profile</a></li>
+                <li><a href="#"><i class="fas fa-chart-line"></i>Reports</a></li>
             </ul>
         </nav>
+        <a href="logout.php" class="logout-button"><i class="fas fa-sign-out-alt"></i>Logout</a>
     </div>
 
     <div class="main-content">
-        
-        </header>
-
-        <main class="container">
-            <div class="dashboard-grid">
-                <div class="card">
-                    <h2>Job Management</h2>
-                    <div class="card-links">
-                        <a href="post_job.php" class="card-link">Post Job Offer</a>
-                        <a href="track_applications.php" class="card-link">Track Job Applications</a>
-                    </div>
-                </div>
-
-                <div class="card">
-                    <h2>Candidate Interaction</h2>
-                    <div class="card-links">
-                        <a href="schedule_interviews.php" class="card-link">Schedule Interviews</a>
-                        <a href="submit_feedback.php" class="card-link">Submit Feedback</a>
-                    </div>
-                </div>
-
-                <div class="card">
-                    <h2>Agency Profile</h2>
-                    <div class="card-links">
-                        <a href="edit_profile.php" class="card-link">View/Edit Profile</a>
-                        <a href="metrics.php" class="card-link">Performance Metrics</a>
-                    </div>
+        <div class="dashboard-grid">
+            <div class="card">
+                <h2>Job Management</h2>
+                <div class="card-links">
+                    <a href="post_job.php" class="card-link"><i class="fas fa-plus"></i>Post Job Offer</a>
+                    <a href="track_applications.php" class="card-link"><i class="fas fa-tasks"></i>Track Job Applications</a>
                 </div>
             </div>
 
-            <a href="logout.php" class="logout-button">Logout</a>
-        </main>
+            <div class="card">
+                <h2>Candidate Interaction</h2>
+                <div class="card-links">
+                    <a href="schedule_interviews.php" class="card-link"><i class="fas fa-calendar-alt"></i>Schedule Interviews</a>
+                    <a href="submit_feedback.php" class="card-link"><i class="fas fa-comment-dots"></i>Submit Feedback</a>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>Agency Profile</h2>
+                <div class="card-links">
+                    <a href="edit_profile.php" class="card-link"><i class="fas fa-edit"></i>View/Edit Profile</a>
+                    <a href="metrics.php" class="card-link"><i class="fas fa-chart-bar"></i>Performance Metrics</a>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>Reports</h2>
+                <div class="card-links">
+                    <a href="generate_reports.php" class="card-link"><i class="fas fa-file-alt"></i>Generate Reports</a>
+                    <a href="view_analytics.php" class="card-link"><i class="fas fa-chart-pie"></i>View Analytics</a>
+                </div>
+            </div>
+        </div>
     </div>
 </body>
 </html>
-
