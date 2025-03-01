@@ -26,7 +26,7 @@ $jobs = $conn->query("SELECT * FROM job WHERE Job_Status = 'Pending'")->fetchAll
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Verify Jobs</title>
-    <link rel="stylesheet" href="staff_verify_jobs.css">
+    <link rel="stylesheet" href="staff_verify.css">
 </head>
 <body>
     <div class="container">

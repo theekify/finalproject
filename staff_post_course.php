@@ -23,7 +23,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Post Course</title>
-    <link rel="stylesheet" href="staff_course.css">
+    <link rel="stylesheet" href="staff_post.css">
 </head>
 <body>
     <div class="container">

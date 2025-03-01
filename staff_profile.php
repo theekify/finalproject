@@ -26,34 +26,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <html>
 <head>
     <title>Staff Profile</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-        }
-        .profile-form {
-            max-width: 400px;
-            margin: 0 auto;
-        }
-        .profile-form input {
-            width: 100%;
-            padding: 10px;
-            margin: 10px 0;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-        }
-        .profile-form button {
-            padding: 10px 20px;
-            background-color: #007BFF;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-        .profile-form button:hover {
-            background-color: #0056b3;
-        }
-    </style>
+    <link rel="stylesheet" href="staff_profile.css">
 </head>
 <body>
     <h1>Staff Profile</h1>

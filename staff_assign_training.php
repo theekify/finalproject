@@ -34,118 +34,109 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <style>
         :root {
             --primary: #6b1950;
-            --primary-light: #fff5f5;
-            --primary-dark: #4a1237;
-            --secondary: #2c3e50;
-            --text-dark: #2d1422;
-            --text-light: #666666;
+            --primary-light: #f8f9fc;
+            --text-primary: #333333;
+            --text-secondary: #666666;
+            --background: #f5f5f5;
             --white: #ffffff;
-            --border: #e5e7eb;
+            --shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+            --radius: 8px;
             --success: #10b981;
-            --shadow: 0 4px 20px rgba(107, 25, 80, 0.1);
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: Arial, sans-serif;
         }
 
         body {
-            background-color: var(--primary-light);
-            color: var(--text-dark);
-            line-height: 1.6;
-            padding: 20px;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: var(--background);
+            color: var(--text-primary);
+            line-height: 1.5;
+            margin: 0;
+            padding: 2rem;
         }
 
         .container {
             max-width: 600px;
             margin: 0 auto;
             background-color: var(--white);
-            border-radius: 8px;
+            padding: 2rem;
+            border-radius: var(--radius);
             box-shadow: var(--shadow);
-            padding: 30px;
         }
 
         h1 {
             color: var(--primary);
-            font-size: 24px;
-            margin-bottom: 20px;
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
             text-align: center;
         }
 
         .success-message {
             background-color: var(--success);
             color: var(--white);
-            padding: 10px;
-            border-radius: 4px;
-            margin-bottom: 20px;
+            padding: 1rem;
+            border-radius: var(--radius);
+            margin-bottom: 1rem;
             text-align: center;
         }
 
         .assignment-form {
             display: flex;
             flex-direction: column;
-            gap: 20px;
+            gap: 1rem;
         }
 
         .form-group {
             display: flex;
             flex-direction: column;
-            gap: 5px;
+            gap: 0.5rem;
         }
 
         label {
             font-weight: bold;
-            color: var(--text-dark);
+            color: var(--text-primary);
         }
 
         select {
             width: 100%;
-            padding: 10px;
-            border: 1px solid var(--border);
-            border-radius: 4px;
-            font-size: 16px;
-            background-color: var(--white);
+            padding: 0.5rem;
+            border: 1px solid #e2e8f0;
+            border-radius: var(--radius);
+            font-size: 1rem;
         }
 
         button {
             background-color: var(--primary);
             color: var(--white);
+            padding: 0.75rem;
             border: none;
-            padding: 12px;
-            border-radius: 4px;
+            border-radius: var(--radius);
             cursor: pointer;
-            font-size: 16px;
-            transition: background-color 0.3s ease;
+            transition: background-color 0.2s;
+            font-size: 1rem;
         }
 
         button:hover {
-            background-color: var(--primary-dark);
+            background-color: #5a1642;
         }
 
         .back-link {
             display: block;
             text-align: center;
-            margin-top: 20px;
+            margin-top: 1rem;
             color: var(--primary);
             text-decoration: none;
-            font-weight: bold;
-            transition: color 0.3s ease;
         }
 
         .back-link:hover {
-            color: var(--primary-dark);
+            text-decoration: underline;
         }
 
         @media (max-width: 768px) {
             .container {
-                padding: 20px;
+                padding: 1rem;
             }
 
-            select {
-                font-size: 14px;
+            select, button {
+                font-size: 0.875rem;
             }
         }
     </style>
@@ -187,3 +178,4 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </div>
 </body>
 </html>
+

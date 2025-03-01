@@ -15,16 +15,20 @@
     color: var(--text-primary);
     line-height: 1.5;
     margin: 0;
-    padding: 2rem;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
   }
   
   .container {
-    max-width: 600px;
-    margin: 0 auto;
     background-color: var(--white);
     padding: 2rem;
     border-radius: var(--radius);
     box-shadow: var(--shadow);
+    width: 100%;
+    max-width: 400px;
   }
   
   h1 {
@@ -45,14 +49,12 @@
     color: var(--text-primary);
   }
   
-  textarea {
+  input {
     width: 100%;
     padding: 0.5rem;
     border: 1px solid #e2e8f0;
     border-radius: var(--radius);
     font-size: 1rem;
-    resize: vertical;
-    min-height: 100px;
   }
   
   button {
@@ -70,12 +72,26 @@
     background-color: #5a1642;
   }
   
+  p {
+    text-align: center;
+    margin-top: 1rem;
+  }
+  
+  a {
+    color: var(--primary);
+    text-decoration: none;
+  }
+  
+  a:hover {
+    text-decoration: underline;
+  }
+  
   @media (max-width: 768px) {
     .container {
       padding: 1rem;
     }
   
-    textarea,
+    input,
     button {
       font-size: 0.875rem;
     }

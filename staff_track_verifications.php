@@ -20,7 +20,7 @@ $jobs = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Track Verifications</title>
-    <link rel="stylesheet" href="staff_track_verifications.css">
+    <link rel="stylesheet" href="staff_track.css">
 </head>
 <body>
     <div class="container">

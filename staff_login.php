@@ -32,6 +32,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <html>
 <head>
     <title>Staff Login</title>
+    <link rel="stylesheet" href="staff_login.css">
 </head>
 <body>
     <h1>Staff Login</h1>
