@@ -115,6 +115,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         .schedule-form {
             display: flex;
+        }
+
+        .schedule-form {
+            display: flex;
             flex-direction: column;
             gap: 10px;
         }
@@ -221,3 +225,4 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </div>
 </body>
 </html>
+
