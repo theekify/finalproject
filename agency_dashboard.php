@@ -196,7 +196,7 @@ $agency = $stmt->fetch(PDO::FETCH_ASSOC);
                 <li><a href="#"><i class="fas fa-briefcase"></i>Job Management</a></li>
                 <li><a href="#"><i class="fas fa-users"></i>Candidate Interaction</a></li>
                 <li><a href="#"><i class="fas fa-user-circle"></i>Agency Profile</a></li>
-                <li><a href="#"><i class="fas fa-chart-line"></i>Reports</a></li>
+           
             </ul>
         </nav>
         <a href="logout.php" class="logout-button"><i class="fas fa-sign-out-alt"></i>Logout</a>
@@ -207,33 +207,27 @@ $agency = $stmt->fetch(PDO::FETCH_ASSOC);
             <div class="card">
                 <h2>Job Management</h2>
                 <div class="card-links">
-                    <a href="post_job.php" class="card-link"><i class="fas fa-plus"></i>Post Job Offer</a>
-                    <a href="track_applications.php" class="card-link"><i class="fas fa-tasks"></i>Track Job Applications</a>
+                    <a href="agency_post_job.php" class="card-link"><i class="fas fa-plus"></i>Post Job Offer</a>
+                    <a href="agency_track_applications.php" class="card-link"><i class="fas fa-tasks"></i>Track Job Applications</a>
                 </div>
             </div>
 
             <div class="card">
                 <h2>Candidate Interaction</h2>
                 <div class="card-links">
-                    <a href="schedule_interviews.php" class="card-link"><i class="fas fa-calendar-alt"></i>Schedule Interviews</a>
-                    <a href="submit_feedback.php" class="card-link"><i class="fas fa-comment-dots"></i>Submit Feedback</a>
+                    <a href="agency_schedule_interview.php" class="card-link"><i class="fas fa-calendar-alt"></i>Schedule Interviews</a>
+                    <a href="agency_submit_feedback.php" class="card-link"><i class="fas fa-comment-dots"></i>Submit Feedback</a>
                 </div>
             </div>
 
             <div class="card">
                 <h2>Agency Profile</h2>
                 <div class="card-links">
-                    <a href="edit_profile.php" class="card-link"><i class="fas fa-edit"></i>View/Edit Profile</a>
-                    <a href="metrics.php" class="card-link"><i class="fas fa-chart-bar"></i>Performance Metrics</a>
+                    <a href="agency_profile.php" class="card-link"><i class="fas fa-edit"></i>View/Edit Profile</a>
                 </div>
             </div>
 
-            <div class="card">
-                <h2>Reports</h2>
-                <div class="card-links">
-                    <a href="generate_reports.php" class="card-link"><i class="fas fa-file-alt"></i>Generate Reports</a>
-                    <a href="view_analytics.php" class="card-link"><i class="fas fa-chart-pie"></i>View Analytics</a>
-                </div>
+            
             </div>
         </div>
     </div>

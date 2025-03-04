@@ -32,7 +32,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $stmt = $conn->prepare("INSERT INTO staff (User_ID, Staff_Name, Staff_Email, Staff_Phone, Staff_Address, Staff_Status) VALUES (?, ?, ?, ?, ?, 'Approved')");
             $stmt->execute([$user_id, $name, $email, $phone, $address]);
         } elseif ($role === 'Agency') {
-            $stmt = $conn->prepare("INSERT INTO agency (User_ID, Agency_Name, Agency_Address, License_Number, Approval_Status) VALUES (?, ?, ?, '', 'Approved')");
+            $stmt = $conn->prepare("INSERT INTO agency (User_ID, Agency_Name, Agency_Address, License_Number, Approval_Status) VALUES (?, ?, ?, NULL, 'Approved')");
             $stmt->execute([$user_id, $name, $address]);
         } elseif ($role === 'Worker') {
             $stmt = $conn->prepare("INSERT INTO worker (User_ID, Passport_Number, Visa_Number, Health_Report, Training_Status, Insurance_Status) VALUES (?, NULL, NULL, 'Pending', 'In Progress', 'Inactive')");
@@ -83,4 +83,4 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <p>Already have an account? <a href="login.php">Login here</a>.</p>
     </div>
 </body>
-</html>>
+</html>

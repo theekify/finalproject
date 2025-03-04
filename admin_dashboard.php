@@ -284,7 +284,7 @@ $admin = $stmt->fetch(PDO::FETCH_ASSOC);
                 </div>
                 <div class="menu-list">
                     <a href="admin_view_activity_logs.php" class="menu-item">Activity Logs</a>
-                    <a href="admin_system_status.php" class="menu-item">System Status</a>
+                    
                 </div>
             </div>
 
