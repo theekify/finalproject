@@ -1,0 +1,130 @@
+:root {
+    --primary: #6b1950;
+    --primary-light: #f8f9fc;
+    --text-primary: #333333;
+    --text-secondary: #666666;
+    --background: #f5f5f5;
+    --white: #ffffff;
+    --shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+    --radius: 8px;
+    --success: #10b981;
+    --danger: #ef4444;
+  }
+  
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background-color: var(--background);
+    color: var(--text-primary);
+    line-height: 1.5;
+    margin: 0;
+    padding: 2rem;
+  }
+  
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    background-color: var(--white);
+    padding: 2rem;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+  }
+  
+  h1 {
+    color: var(--primary);
+    font-size: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+  
+  .jobs-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 1.5rem;
+  }
+  
+  .jobs-table th,
+  .jobs-table td {
+    padding: 0.75rem;
+    text-align: left;
+    border-bottom: 1px solid #e2e8f0;
+  }
+  
+  .jobs-table th {
+    background-color: var(--primary-light);
+    color: var(--primary);
+    font-weight: 600;
+  }
+  
+  .jobs-table tr:nth-child(even) {
+    background-color: #f8fafc;
+  }
+  
+  .job-description,
+  .job-requirements {
+    max-width: 300px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  
+  .action-buttons {
+    display: flex;
+    gap: 0.5rem;
+  }
+  
+  .btn {
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: var(--radius);
+    cursor: pointer;
+    transition: background-color 0.2s;
+  }
+  
+  .btn-approve {
+    background-color: var(--success);
+    color: var(--white);
+  }
+  
+  .btn-approve:hover {
+    background-color: #0d9488;
+  }
+  
+  .btn-reject {
+    background-color: var(--danger);
+    color: var(--white);
+  }
+  
+  .btn-reject:hover {
+    background-color: #dc2626;
+  }
+  
+  .back-link {
+    display: inline-block;
+    margin-top: 1rem;
+    color: var(--primary);
+    text-decoration: none;
+  }
+  
+  .back-link:hover {
+    text-decoration: underline;
+  }
+  
+  @media (max-width: 768px) {
+    .container {
+      padding: 1rem;
+    }
+  
+    .jobs-table {
+      font-size: 0.875rem;
+    }
+  
+    .jobs-table th,
+    .jobs-table td {
+      padding: 0.5rem;
+    }
+  
+    .action-buttons {
+      flex-direction: column;
+    }
+  }
+  
+  
