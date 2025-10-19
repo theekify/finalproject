@@ -235,9 +235,7 @@ $admin = $stmt->fetch(PDO::FETCH_ASSOC);
             <a href="admin_view_activity_logs.php" class="nav-item">
                 <i class="fas fa-history"></i> Activity Logs
             </a>
-            <a href="admin_system_status.php" class="nav-item">
-                <i class="fas fa-heartbeat"></i> System Status
-            </a>
+            
             <a href="admin_send_notifications.php" class="nav-item">
                 <i class="fas fa-bell"></i> Notifications
             </a>

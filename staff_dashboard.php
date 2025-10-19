@@ -5,6 +5,11 @@ require 'db.php';
 $stmt = $conn->prepare("SELECT * FROM staff WHERE User_ID = ?");
 $stmt->execute([1]); // Replace 1 with the actual user ID you want to fetch
 $staff = $stmt->fetch(PDO::FETCH_ASSOC);
+
+// Get latest notification
+$stmt = $conn->prepare("SELECT * FROM Notifications ORDER BY dateSent DESC LIMIT 1");
+$stmt->execute();
+$notification = $stmt->fetch(PDO::FETCH_ASSOC);
 ?>
 
 <!DOCTYPE html>
@@ -120,6 +125,61 @@ $staff = $stmt->fetch(PDO::FETCH_ASSOC);
             padding: 2rem;
         }
 
+        /* NOTIFICATION BANNER STYLES */
+        .notification-banner {
+            background: linear-gradient(135deg, #6b1950, #8a2b6b);
+            color: white;
+            padding: 1rem 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-radius: var(--radius);
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 12px rgba(107, 25, 80, 0.3);
+            border-left: 4px solid #ffd700;
+        }
+
+        .notification-content {
+            flex-grow: 1;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            font-size: 0.95rem;
+            font-weight: 500;
+        }
+
+        .notification-content strong {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 0.4rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            white-space: nowrap;
+        }
+
+        .notification-close {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: 50%;
+            transition: all 0.2s;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .notification-close:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: scale(1.1);
+        }
+
         .dashboard-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -178,6 +238,18 @@ $staff = $stmt->fetch(PDO::FETCH_ASSOC);
             .dashboard-grid {
                 grid-template-columns: 1fr;
             }
+
+            .notification-banner {
+                padding: 1rem;
+                flex-direction: column;
+                gap: 1rem;
+                text-align: center;
+            }
+
+            .notification-content {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
         }
     </style>
 </head>
@@ -192,13 +264,27 @@ $staff = $stmt->fetch(PDO::FETCH_ASSOC);
                 <li><a href="staff_post_course.php"><i class="fas fa-graduation-cap"></i>Post a Course</a></li>
                 <li><a href="staff_verify_jobs.php"><i class="fas fa-check-circle"></i>Job Verification</a></li>
                 <li><a href="staff_monitor_complaints.php"><i class="fas fa-exclamation-circle"></i>Complaint Management</a></li>
-                <li><a href="staff_profile.php"><i class="fas fa-user-circle"></i>Staff Profile</a></li>
             </ul>
         </nav>
         <a href="logout.php" class="logout-button"><i class="fas fa-sign-out-alt"></i>Logout</a>
     </div>
 
     <div class="main-content">
+        <?php if ($notification): ?>
+        <div class="notification-banner">
+            <div class="notification-content">
+                <strong>
+                    <i class="fas fa-bullhorn"></i>
+                    Admin Notification
+                </strong>
+                <span><?php echo htmlspecialchars($notification['message']); ?></span>
+            </div>
+            <button class="notification-close" onclick="this.parentElement.style.display='none'" title="Dismiss notification">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <?php endif; ?>
+
         <div class="dashboard-grid">
             <div class="card">
                 <h2>Training Management</h2>
@@ -221,13 +307,6 @@ $staff = $stmt->fetch(PDO::FETCH_ASSOC);
                 <h2>Complaint Management</h2>
                 <div class="card-links">
                     <a href="staff_monitor_complaints.php" class="card-link">Monitor Complaints</a>
-                </div>
-            </div>
-
-            <div class="card">
-                <h2>Staff Profile</h2>
-                <div class="card-links">
-                    <a href="staff_profile.php" class="card-link">View/Edit Profile</a>
                 </div>
             </div>
         </div>

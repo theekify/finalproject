@@ -14,29 +14,46 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $stmt->execute([$email]);
     $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
-    if ($user && password_verify($password, $user['User_Password'])) {
-        // Set session variables
-        $_SESSION['user_id'] = $user['User_ID'];
-        $_SESSION['user_role'] = $user['User_Role'];
-        $_SESSION['user_email'] = $user['User_Email'];
-        $_SESSION['user_status'] = $user['User_Status']; // Store user status in session
+    if ($user) {
+        // Check if password is correct
+        if (password_verify($password, $user['User_Password'])) {
+            // Check if user is approved
+            if ($user['User_Status'] === 'Approved') {
+                // Set session variables
+                $_SESSION['user_id'] = $user['User_ID'];
+                $_SESSION['user_role'] = $user['User_Role'];
+                $_SESSION['user_email'] = $user['User_Email'];
+                $_SESSION['user_status'] = $user['User_Status'];
+                $_SESSION['user_name'] = $user['User_Name'];
 
-        // Redirect based on role
-        switch ($user['User_Role']) {
-            case 'Admin':
-                header('Location: admin_dashboard.php');
-                break;
-            case 'Staff':
-                header('Location: staff_dashboard.php');
-                break;
-            case 'Agency':
-                header('Location: agency_dashboard.php');
-                break;
-            case 'Worker':
-                header('Location: worker_dashboard.php');
-                break;
+                // Redirect based on role
+                switch ($user['User_Role']) {
+                    case 'Admin':
+                        header('Location: admin_dashboard.php');
+                        break;
+                    case 'Staff':
+                        header('Location: staff_dashboard.php');
+                        break;
+                    case 'Agency':
+                        header('Location: agency_dashboard.php');
+                        break;
+                    case 'Worker':
+                        header('Location: worker_dashboard.php');
+                        break;
+                    default:
+                        header('Location: dashboard.php');
+                }
+                exit;
+            } else {
+                // User exists but is not approved
+                $error_message = "Your account is pending approval. Please wait for administrator approval.";
+            }
+        } else {
+            // Password is incorrect
+            $error_message = "Invalid email or password.";
         }
     } else {
+        // User doesn't exist
         $error_message = "Invalid email or password.";
     }
 }
@@ -58,6 +75,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             --white: #ffffff;
             --shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
             --radius: 8px;
+            --warning: #f59e0b;
         }
 
         body {
@@ -104,6 +122,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             margin-bottom: 1rem;
             border: 1px solid #e2e8f0;
             border-radius: var(--radius);
+            font-size: 1rem;
         }
 
         button {
@@ -114,6 +133,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             border-radius: var(--radius);
             cursor: pointer;
             transition: background-color 0.2s;
+            font-size: 1rem;
+            font-weight: 500;
         }
 
         button:hover {
@@ -124,6 +145,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             color: #ef4444;
             margin-bottom: 1rem;
             text-align: center;
+            padding: 0.75rem;
+            background-color: #fef2f2;
+            border-radius: var(--radius);
+            border: 1px solid #fecaca;
+        }
+
+        .warning-message {
+            color: var(--warning);
+            margin-bottom: 1rem;
+            text-align: center;
+            padding: 0.75rem;
+            background-color: #fffbeb;
+            border-radius: var(--radius);
+            border: 1px solid #fef3c7;
         }
 
         p {
@@ -134,6 +169,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         a {
             color: var(--primary);
             text-decoration: none;
+            font-weight: 500;
         }
 
         a:hover {
@@ -143,6 +179,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         @media (max-width: 768px) {
             .container {
                 padding: 1rem;
+                margin: 1rem;
             }
         }
     </style>
@@ -150,12 +187,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <body>
     <div class="container">
         <h1>Login to SLBFE Job Portal</h1>
+        
         <?php if ($error_message): ?>
-            <p class="error-message"><?php echo htmlspecialchars($error_message); ?></p>
+            <?php if (strpos($error_message, 'pending approval') !== false): ?>
+                <div class="warning-message">
+                    <?php echo htmlspecialchars($error_message); ?>
+                </div>
+            <?php else: ?>
+                <div class="error-message">
+                    <?php echo htmlspecialchars($error_message); ?>
+                </div>
+            <?php endif; ?>
         <?php endif; ?>
+        
         <form method="POST">
             <label for="email">Email:</label>
-            <input type="email" id="email" name="email" required>
+            <input type="email" id="email" name="email" required value="<?php echo isset($_POST['email']) ? htmlspecialchars($_POST['email']) : ''; ?>">
             
             <label for="password">Password:</label>
             <input type="password" id="password" name="password" required>
@@ -166,4 +213,3 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </div>
 </body>
 </html>
-

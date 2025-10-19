@@ -109,11 +109,11 @@ $feedbacks = $stmt->fetchAll(PDO::FETCH_ASSOC);
             .feedback-content {
                 max-width: 150px;
             }
-        }
+        }  
     </style>
 </head>
 <body>
-    <div class="container">
+    <div class="container">    
         <h1>Agency Feedback</h1>
         <table class="feedback-table">
             <thead>

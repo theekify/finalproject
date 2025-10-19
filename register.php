@@ -17,29 +17,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($emailExists) {
         echo "Email already exists. Please use a different email.";
     } else {
-        // Insert into user table
-        $stmt = $conn->prepare("INSERT INTO user (User_Name, User_Email, User_Password, User_Phone, User_Address, User_Role, User_Status) VALUES (?, ?, ?, ?, ?, ?, 'Approved')");
+        // Insert into user table with 'Pending' status
+        $stmt = $conn->prepare("INSERT INTO user (User_Name, User_Email, User_Password, User_Phone, User_Address, User_Role, User_Status) VALUES (?, ?, ?, ?, ?, ?, 'Pending')");
         $stmt->execute([$name, $email, $password, $phone, $address, $role]);
 
         // Get the last inserted User_ID
         $user_id = $conn->lastInsertId();
 
-        // Insert into respective table based on role
+        // Insert into respective table based on role with appropriate status
         if ($role === 'Admin') {
-            $stmt = $conn->prepare("INSERT INTO admin (User_ID, Admin_Name, Admin_Email, Admin_Phone, Admin_Status) VALUES (?, ?, ?, ?, 'Active')");
+            $stmt = $conn->prepare("INSERT INTO admin (User_ID, Admin_Name, Admin_Email, Admin_Phone, Admin_Status) VALUES (?, ?, ?, ?, 'Pending')");
             $stmt->execute([$user_id, $name, $email, $phone]);
         } elseif ($role === 'Staff') {
-            $stmt = $conn->prepare("INSERT INTO staff (User_ID, Staff_Name, Staff_Email, Staff_Phone, Staff_Address, Staff_Status) VALUES (?, ?, ?, ?, ?, 'Approved')");
+            $stmt = $conn->prepare("INSERT INTO staff (User_ID, Staff_Name, Staff_Email, Staff_Phone, Staff_Address, Staff_Status) VALUES (?, ?, ?, ?, ?, 'Pending')");
             $stmt->execute([$user_id, $name, $email, $phone, $address]);
         } elseif ($role === 'Agency') {
-            $stmt = $conn->prepare("INSERT INTO agency (User_ID, Agency_Name, Agency_Address, License_Number, Approval_Status) VALUES (?, ?, ?, NULL, 'Approved')");
+            $stmt = $conn->prepare("INSERT INTO agency (User_ID, Agency_Name, Agency_Address, License_Number, Approval_Status) VALUES (?, ?, ?, NULL, 'Pending')");
             $stmt->execute([$user_id, $name, $address]);
         } elseif ($role === 'Worker') {
             $stmt = $conn->prepare("INSERT INTO worker (User_ID, Passport_Number, Visa_Number, Health_Report, Training_Status, Insurance_Status) VALUES (?, NULL, NULL, 'Pending', 'In Progress', 'Inactive')");
             $stmt->execute([$user_id]);
         }
 
-        echo "Registration successful! You can now log in.";
+        echo "Registration successful! Your account is pending approval. Please check back in a while.";
     }
 }
 ?>

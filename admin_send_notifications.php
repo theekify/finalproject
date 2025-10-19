@@ -1,25 +1,42 @@
 <?php
 require 'db.php';
 
-// Fetch all users
-$stmt = $conn->prepare("SELECT User_Email FROM user");
-$stmt->execute();
-$users = $stmt->fetchAll(PDO::FETCH_ASSOC);
+// Fetch admin details
+$stmt = $conn->prepare("SELECT * FROM admin WHERE User_ID = ?");
+$stmt->execute([1]);
+$admin = $stmt->fetch(PDO::FETCH_ASSOC);
 
-// Handle sending notifications
+// Handle form submission
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $subject = $_POST['subject'];
-    $message = $_POST['message'];
-
-    // Send email to all users
-    foreach ($users as $user) {
-        $to = $user['User_Email'];
-        $headers = "From: admin@jobportal.com";
-        mail($to, $subject, $message, $headers);
+    if (isset($_POST['send_notification'])) {
+        $message = trim($_POST['message']);
+        
+        if (!empty($message)) {
+            $stmt = $conn->prepare("INSERT INTO Notifications (message) VALUES (?)");
+            $stmt->execute([$message]);
+            $success = "Notification sent successfully!";
+        } else {
+            $error = "Please enter a message";
+        }
     }
-
-    $success_message = "Notifications sent successfully.";
+    
+    if (isset($_POST['delete_notification'])) {
+        $notification_id = $_POST['notification_id'];
+        $stmt = $conn->prepare("DELETE FROM Notifications WHERE notificationId = ?");
+        $stmt->execute([$notification_id]);
+        $success = "Notification deleted successfully!";
+    }
 }
+
+// Get all notifications
+$stmt = $conn->prepare("SELECT * FROM Notifications ORDER BY dateSent DESC");
+$stmt->execute();
+$notifications = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+// Get latest notification
+$stmt = $conn->prepare("SELECT * FROM Notifications ORDER BY dateSent DESC LIMIT 1");
+$stmt->execute();
+$current_notification = $stmt->fetch(PDO::FETCH_ASSOC);
 ?>
 
 <!DOCTYPE html>
@@ -27,99 +44,378 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Send Notifications</title>
+    <title>Send Notifications - Admin Dashboard</title>
     <style>
         :root {
             --primary: #6b1950;
             --primary-light: #f8f9fc;
-            --text-primary: #333333;
+            --text-primary: #1a1a1a;
             --text-secondary: #666666;
-            --background: #f5f5f5;
+            --border: #e5e7eb;
+            --background: #f1f5f9;
             --white: #ffffff;
-            --shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+            --shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
             --radius: 8px;
         }
 
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background-color: var(--background);
-            color: var(--text-primary);
-            line-height: 1.5;
+        * {
             margin: 0;
-            padding: 2rem;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
         }
 
-        .container {
-            max-width: 600px;
-            margin: 0 auto;
-            background-color: var(--white);
-            padding: 2rem;
-            border-radius: var(--radius);
-            box-shadow: var(--shadow);
+        body {
+            background-color: var(--background);
+            display: flex;
+            min-height: 100vh;
         }
 
-        h1 {
-            color: var(--primary);
-            font-size: 1.5rem;
-            margin-bottom: 1.5rem;
-        }
-
-        form {
+        /* Original Sidebar Styles */
+        .sidebar {
+            width: 250px;
+            background: var(--white);
+            border-right: 1px solid var(--border);
+            padding: 1.5rem;
             display: flex;
             flex-direction: column;
         }
 
-        label {
+        .logo {
+            color: var(--primary);
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 2rem;
+        }
+
+        .nav-menu {
+            flex-grow: 1;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            padding: 0.75rem;
+            color: var(--text-secondary);
+            text-decoration: none;
+            border-radius: var(--radius);
             margin-bottom: 0.5rem;
+            transition: all 0.2s;
+        }
+
+        .nav-item:hover, .nav-item.active {
+            background: var(--primary-light);
+            color: var(--primary);
+        }
+
+        .nav-item i {
+            margin-right: 0.75rem;
+            font-size: 1rem;
+        }
+
+        .logout-button {
+            padding: 0.75rem;
+            background: var(--primary-light);
+            color: var(--primary);
+            border: none;
+            border-radius: var(--radius);
+            font-size: 0.875rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: center;
+            text-decoration: none;
+        }
+
+        .logout-button:hover {
+            background: var(--primary);
+            color: var(--white);
+        }
+
+        .main-content {
+            flex-grow: 1;
+            padding: 2rem;
+            overflow-y: auto;
+        }
+
+        .top-bar {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--primary-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        /* Simple Content Styles */
+        .notification-container {
+            max-width: 800px;
+        }
+
+        .page-title {
+            color: var(--text-primary);
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .card {
+            background: var(--white);
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            border: 1px solid var(--border);
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+            font-weight: 500;
+        }
+
+        .form-textarea {
+            width: 100%;
+            padding: 1rem;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            font-size: 1rem;
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        .form-textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            background: var(--primary);
+            color: var(--white);
+            border: none;
+            border-radius: var(--radius);
+            font-size: 0.875rem;
+            font-weight: 500;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn:hover {
+            background: #5a1540;
+        }
+
+        .btn-danger {
+            background: #dc2626;
+        }
+
+        .btn-danger:hover {
+            background: #b91c1c;
+        }
+
+        .alert {
+            padding: 1rem;
+            border-radius: var(--radius);
+            margin-bottom: 1rem;
+        }
+
+        .alert-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .alert-error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .notification-item {
+            padding: 1rem 0;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+
+        .notification-item:last-child {
+            border-bottom: none;
+        }
+
+        .notification-message {
+            margin-bottom: 0.5rem;
+        }
+
+        .notification-meta {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 2rem;
             color: var(--text-secondary);
         }
 
-        input, textarea {
-            padding: 0.5rem;
-            margin-bottom: 1rem;
-            border: 1px solid #e2e8f0;
-            border-radius: var(--radius);
-        }
+        @media (max-width: 768px) {
+            body {
+                flex-direction: column;
+            }
 
-        textarea {
-            resize: vertical;
-            min-height: 100px;
-        }
+            .sidebar {
+                width: 100%;
+                border-right: none;
+                border-bottom: 1px solid var(--border);
+            }
 
-        button {
-            background-color: var(--primary);
-            color: var(--white);
-            padding: 0.75rem;
-            border: none;
-            border-radius: var(--radius);
-            cursor: pointer;
-            transition: background-color 0.2s;
-        }
+            .main-content {
+                padding: 1rem;
+            }
 
-        button:hover {
-            background-color: #5a1642;
-        }
-
-        .success-message {
-            color: #10b981;
-            margin-bottom: 1rem;
+            .notification-item {
+                flex-direction: column;
+                gap: 1rem;
+            }
         }
     </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
-    <div class="container">
-        <h1>Send Notifications</h1>
-        <?php if (isset($success_message)): ?>
-            <p class="success-message"><?php echo $success_message; ?></p>
-        <?php endif; ?>
-        <form method="POST">
-            <label for="subject">Subject:</label>
-            <input type="text" id="subject" name="subject" required>
-            <label for="message">Message:</label>
-            <textarea id="message" name="message" rows="5" required></textarea>
-            <button type="submit">Send</button>
-        </form>
+    <div class="sidebar">
+        <div class="logo">Admin Dashboard</div>
+        <nav class="nav-menu">
+            <a href="admin_dashboard.php" class="nav-item">
+                <i class="fas fa-tachometer-alt"></i> Dashboard
+            </a>
+            <a href="admin_approve_users.php" class="nav-item">
+                <i class="fas fa-user-check"></i> Approve Users
+            </a>
+            <a href="admin_assign_roles.php" class="nav-item">
+                <i class="fas fa-users-cog"></i> Manage Roles
+            </a>
+            <a href="admin_view_activity_logs.php" class="nav-item">
+                <i class="fas fa-history"></i> Activity Logs
+            </a>
+            <a href="admin_send_notifications.php" class="nav-item active">
+                <i class="fas fa-bell"></i> Notifications
+            </a>
+            <a href="admin_generate_reports.php" class="nav-item">
+                <i class="fas fa-chart-line"></i> Reports
+            </a>
+            <a href="admin_faq.php" class="nav-item">
+                <i class="fas fa-question-circle"></i> FAQ
+            </a>
+        </nav>
+        <a href="logout.php" class="logout-button">
+            <i class="fas fa-sign-out-alt"></i> Logout
+        </a>
+    </div>
+
+    <div class="main-content">
+        <div class="top-bar">
+            <div class="user-profile">
+                <div class="user-avatar">
+                    <!-- User avatar content -->
+                </div>
+            </div>
+        </div>
+
+        <div class="notification-container">
+            <h1 class="page-title">Send Notifications</h1>
+
+            <?php if (isset($success)): ?>
+                <div class="alert alert-success">
+                    <i class="fas fa-check-circle"></i> <?php echo htmlspecialchars($success); ?>
+                </div>
+            <?php endif; ?>
+
+            <?php if (isset($error)): ?>
+                <div class="alert alert-error">
+                    <i class="fas fa-exclamation-circle"></i> <?php echo htmlspecialchars($error); ?>
+                </div>
+            <?php endif; ?>
+
+            <div class="card">
+                <form method="POST" action="">
+                    <div class="form-group">
+                        <label class="form-label" for="message">Notification Message</label>
+                        <textarea 
+                            class="form-textarea" 
+                            id="message" 
+                            name="message" 
+                            placeholder="Type your notification message here..."
+                            required
+                            maxlength="255"
+                        ></textarea>
+                    </div>
+                    <button type="submit" name="send_notification" class="btn">
+                        <i class="fas fa-paper-plane"></i> Send to All Users
+                    </button>
+                </form>
+            </div>
+
+            <?php if ($current_notification): ?>
+                <div class="card">
+                    <h3 style="color: var(--primary); margin-bottom: 1rem;">Current Notification</h3>
+                    <p style="margin-bottom: 0.5rem;"><?php echo htmlspecialchars($current_notification['message']); ?></p>
+                    <small style="color: var(--text-secondary);">
+                        Sent: <?php echo date('F j, Y g:i A', strtotime($current_notification['dateSent'])); ?>
+                    </small>
+                </div>
+            <?php endif; ?>
+
+            <div class="card">
+                <h3 style="color: var(--primary); margin-bottom: 1rem;">Notification History</h3>
+                
+                <?php if (count($notifications) > 0): ?>
+                    <?php foreach ($notifications as $notification): ?>
+                    <div class="notification-item">
+                        <div>
+                            <div class="notification-message">
+                                <?php echo htmlspecialchars($notification['message']); ?>
+                            </div>
+                            <div class="notification-meta">
+                                <?php echo date('M j, Y g:i A', strtotime($notification['dateSent'])); ?> | ID: <?php echo $notification['notificationId']; ?>
+                            </div>
+                        </div>
+                        <form method="POST" action="" onsubmit="return confirm('Are you sure you want to delete this notification?');">
+                            <input type="hidden" name="notification_id" value="<?php echo $notification['notificationId']; ?>">
+                            <button type="submit" name="delete_notification" class="btn btn-danger">
+                                <i class="fas fa-trash"></i> Delete
+                            </button>
+                        </form>
+                    </div>
+                    <?php endforeach; ?>
+                <?php else: ?>
+                    <div class="empty-state">
+                        <p>No notifications sent yet</p>
+                    </div>
+                <?php endif; ?>
+            </div>
+        </div>
     </div>
 </body>
 </html>
-
